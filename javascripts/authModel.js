@@ -8,6 +8,7 @@ async function auth(reqUrl, res, number) {
 
     let matchPassword = getPw(reqUrl)
     let password = await User.find({ name: getLogin(reqUrl) }, { password: 1, _id: 0 })
+    if (password != "") {
     password = password[0].password
 
     let fullId = `@${getLogin(reqUrl)}?${getPw(reqUrl)}`
@@ -132,6 +133,7 @@ async function auth(reqUrl, res, number) {
     } else {
         res.redirect("/users/login")
     }
+}
 }
 
 module.exports = auth
