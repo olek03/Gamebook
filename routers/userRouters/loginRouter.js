@@ -9,7 +9,7 @@ router.route("/")
     })
     .post(async (req, res) => {
         let password = await User.find({ name: req.body.login }, { password: 1, _id: 0 })
-        if (password != "") {
+        
             password = password[0].password
 
             if (await bcrypt.compare(req.body.password, password)) {
@@ -17,9 +17,7 @@ router.route("/")
             } else {
                 res.redirect("/users/login")
             }
-        } else {
-            res.redirect("/users/new")
-        }
+        
     })
 
 router.get("/failed", (req, res) => {
