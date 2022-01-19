@@ -28,19 +28,20 @@ router.post("/userCreated", async (req, res) => {
         }
 
         today = `${dd}-${mm}-${yyyy} ${hh}:${mi}`
-        
-        await User.create({ 
+
+        const newuser = new User({ 
             name: req.body.nickname, 
             password: await bcrypt.hash(req.body.password, 10), 
             JoinedAt: today,
             points: 0
         })
+        
+        await newuser.save()
             
         res.redirect("/users/login")
 
     } catch (e) {
         taken = 1
-        res.redirect("/users/new")
         console.error(e.message)
     }
 })
