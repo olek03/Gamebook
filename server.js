@@ -13,4 +13,6 @@ app.use(express.urlencoded())
 
 app.use("/users", usersRouter)
 
+app.get("/", (req, res) => res.redirect("/users/login"))
+
 app.listen(process.env.PORT || 5000)
