@@ -54,9 +54,9 @@ let preset = () => {
         return
     }
 }
-preset()
 
 if (btn) {
+    preset()
     btn.addEventListener("click", () => {
         toggler()
         stan = parseInt(localStorage.getItem("bubbles"))
