@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Gamebook | <%= user.name %> profile</title>
+    <link href="/static/css/userProfile.css" rel="stylesheet" />
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
+        rel="stylesheet">
+    <script defer src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+    <script defer src="https://unpkg.com/filepond-plugin-file-encode/dist/filepond-plugin-file-encode.js"></script>
+    <script defer src="https://unpkg.com/filepond-plugin-image-resize/dist/filepond-plugin-image-resize.js"></script>
+    <script defer src="https://unpkg.com/filepond/dist/filepond.js"></script>
+    <script defer src="/static/js/fileUpload.js"></script>
+
+    <script defer src="/static/js/bubbles.js"></script>
+    <script defer src="/static/js/scrolling.js"></script>
+    <script defer src="/static/js/likes.js"></script>
+    <script defer src="/static/js/action.js"></script>
+
+</head>
+
+<body>
+    <canvas></canvas>
+    <div id="root">
+        
+        <div id="container">
+
+            <div id="trueleft">
+                <div id="userdiv">
+                    <% if (user.name == loguser.name) { %>
+                <a href="/users/edit/<%=locals.fullId%>">
+                    <% } %>
+                    <div id="profile">
+                        <% let profileimg = image.filter(img => img.thisid.toString() == user.profilepic) %>
+                        <% if (profileimg[0] != null) { %>
+                            <img class="profile" src="<%=profileimg[0].coverImagePath%>">
+                        <% } %>
+                
+                        <h1><%= user.name || "Not found" %></h1>
+                        <p class="points"><%= user.points %></p>
+                    </div>
+                    <% if (user.name == loguser.name) { %>
+                </a>
+                <% } %>
+
+                <p><%= user.description %></p><br>
+                <p>Likes: <%= user.likes.length %></p>
+
+                <form action="/users/like/profile/<%=fullId%>" method="post">
+                    <input name="like" class="hidden" value='{"liker":"<%=loguser.name%>", "user":"<%=user.name%>"}'>
+                    <button type="submit" class="commentlike">Like</button>
+                </form>
+
+                </div>
+                
+                <div id="left">
+                <h1 class="sticky">Saved posts</h1>
+                
+                <div id="posts">
+
+                    <% for (let i = 0; i < saved.length; i++) { %>
+                        <% if (i < 1) { %>
+                            <div class="postframe show">
+                        <% } else { %>
+                            <div class="postframe">
+                        <% } %>
+        
+                            <div class="maincontent">
+        
+                            <div class="post">
+                            <a href="/users/view/<%=saved[i].nickname%><%=fullId%>">
+                            <div class="userprofile">
+        
+                            <% let userphoto = image.filter(img => img.thisid.toString() == saved[i].userprof) %>
+                            <% if (userphoto[0] != null) { %>
+                                <img class="profile" src="<%=userphoto[0].coverImagePath%>">
+                             <% } %>
+                            
+                            <h1><%= saved[i].nickname %></h1>
+                            <p class="points"><%= saved[i].points %></p>
+                            </div>
+                            </a>
+        
+                            <div class="postcontent">
+                            <% if (saved[i].text) { %>
+                            <p><%= saved[i].text %></p>
+                            <% } %>
+                            
+                            <% let postimg = image.filter(img => img.thisid.toString() == saved[i].photoid) %>
+                            <% if (postimg[0] != null) { %>
+                                <img class="photo" src="<%=postimg[0].coverImagePath%>">
+                                <% } %>
+                            </div>
+                            </div>
+        
+                            <div class="comments">
+                                <h2>Comments</h2>
+        
+                                <form id="sendcomment2" action="/users/comment/add/<%=fullId%>" method="post" name="form2">
+                                    <input id="sendcomment" name="id" class="hidden" value='{"postid":"<%=saved[i]._id%>", "commenter":"<%=loguser.name%>"}'>
+                                    <textarea class="commentfield" name="comment"></textarea>
+                                    <input type="file" id="inputimg" name="image" class="filepond">
+                                    <button class="commentbtn" type="submit">Comment</button>
+                                </form>
+        
+                                <% const allcomments = [] %>
+                                <% for (let x = 0; x < saved[i].comments.length; x++) { %>
+                                    <% allcomments.push(saved[i].comments[x]) %>
+                                <% } %>
+                                <% const thiscomments = allcomments.sort((a, b) => a.createdAt - b.createdAt).reverse() %>
+                                
+                                <div class="allcomments">
+                                <% for (let z = 0; z < thiscomments.length; z++) { %>
+                                    <div class="newcomment">
+                                            <a href="/users/view/<%=thiscomments[z].nickname%><%=fullId%>">
+                                            <div class="userprofile">
+                
+                                                <% if (thiscomments[z].userprof != null) { %>
+                                                    <% let commentimg = image.filter(img => img.thisid.toString() == thiscomments[z].userprof) %>
+                                                    <% if (commentimg[0] != null) { %>
+                                                        <img class="profile" src="<%=commentimg[0].coverImagePath%>">
+                                                    <% } %>
+                                                <% } %>
+                
+                                                <h2><%= thiscomments[z].nickname %></h2>
+                                                <p class="points"><%= thiscomments[z].points %></p>
+                                            </div>
+                                            </a>
+                
+                                            <p><%= thiscomments[z].text %></p>
+        
+                                            <% if (thiscomments[z].photoid != null) { %>
+                                                <% let commentimg = image.filter(img => img.thisid.toString() == thiscomments[z].photoid) %>
+                                                <% if (commentimg[0] != null) { %>
+                                                    <img class="photo" src="<%=commentimg[0].coverImagePath%>">
+                                                <% } %>
+                                            <% } %>
+        
+                                            <form action="/users/comment/like/<%=fullId%>" method="post">
+                                                <input name="like" class="hidden" value='{"postid":"<%=saved[i]._id%>", "commentid":"<%=thiscomments[z]._id%>", "liker":"<%=loguser.name%>"}'>
+                                                <button type="submit" class="commentlike">Like</button>
+                                            </form>
+        
+                                            <span class="commentcounter">
+                                                <%= thiscomments[z].likes.length %> 
+                                            </span>
+        
+                                            </div>
+                                <% } %>
+                                </div>
+                            </div>
+        
+                            </div>
+                                <div class="buttons">
+                                    <div id="likes">
+                                        <form action="/users/like/<%=fullId%>" method="post">
+                                            <input name="like" class="hidden" value='{"postid":"<%=saved[i]._id%>", "liker":"<%=loguser.name%>"}'>
+                                            <button type="submit" class="like">Like</button>
+                                        </form>
+                                        <span class="counter">
+                                            <%= saved[i].likes.length %> 
+                                        </span>
+                                    </div>
+                                    
+                                    <form action="/users/comment/save/<%=fullId%>" method="post">
+                                        <input name="save" class="hidden" value='{"postid":"<%=saved[i]._id%>", "user":"<%=user.name%>"}'>
+                                        <button type="submit" class="like">Unsave</button>
+                                    </form>
+                                </div>
+                        </div>
+                    <% } %>
+                 
+                        </div>
+
+                </div>
+
+            </div>
+
+            <div id="truemiddle">
+
+                <div id="title">
+                    <a href="/users/<%=fullId%>" id="refresh">
+                        <span id="name">Gamebook</span>
+                    </a>
+                </div>
+
+            <div id="middle">
+
+                <h1 class="sticky"><%= user.name %> posts</h1>
+
+                <div id="posts">
+
+                    <% for (let i = 0; i < posts.length; i++) { %>
+                        <% if (i < 1) { %>
+                            <div class="postframe show">
+                        <% } else { %>
+                            <div class="postframe">
+                        <% } %>
+        
+                            <div class="maincontent">
+        
+                            <div class="post">
+                            <a href="/users/view/<%=posts[i].nickname%><%=fullId%>">
+                            <div class="userprofile">
+        
+                            <% let userphoto = image.filter(img => img.thisid.toString() == posts[i].userprof) %>
+                            <% if (userphoto[0] != null) { %>
+                                <img class="profile" src="<%=userphoto[0].coverImagePath%>">
+                             <% } %>
+                            
+                            <h1><%= posts[i].nickname %></h1>
+                            <p class="points"><%= posts[i].points %></p>
+                            </div>
+                            </a>
+        
+                            <div class="postcontent">
+                            <% if (posts[i].text) { %>
+                            <p><%= posts[i].text %></p>
+                            <% } %>
+                            
+                            <% let postimg = image.filter(img => img.thisid.toString() == posts[i].photoid) %>
+                            <% if (postimg[0] != null) { %>
+                                <img class="photo" src="<%=postimg[0].coverImagePath%>">
+                                <% } %>
+                            </div>
+                            </div>
+        
+                            <div class="comments">
+                                <h2>Comments</h2>
+        
+                                <form id="sendcomment2" action="/users/comment/add/<%=fullId%>" method="post" name="form2">
+                                    <input id="sendcomment" name="id" class="hidden" value='{"postid":"<%=posts[i]._id%>", "commenter":"<%=loguser.name%>"}'>
+                                    <textarea class="commentfield" name="comment"></textarea>
+                                    <input type="file" id="inputimg" name="image" class="filepond">
+                                    <button class="commentbtn" type="submit">Comment</button>
+                                </form>
+        
+                                <% const allcomments = [] %>
+                                <% for (let x = 0; x < posts[i].comments.length; x++) { %>
+                                    <% allcomments.push(posts[i].comments[x]) %>
+                                <% } %>
+                                <% const thiscomments = allcomments.sort((a, b) => a.createdAt - b.createdAt).reverse() %>
+                                
+                                <div class="allcomments">
+                                <% for (let z = 0; z < thiscomments.length; z++) { %>
+                                    <div class="newcomment">
+                                            <a href="/users/view/<%=thiscomments[z].nickname%><%=fullId%>">
+                                            <div class="userprofile">
+                
+                                                <% if (thiscomments[z].userprof != null) { %>
+                                                    <% let commentimg = image.filter(img => img.thisid.toString() == thiscomments[z].userprof) %>
+                                                    <% if (commentimg[0] != null) { %>
+                                                        <img class="profile" src="<%=commentimg[0].coverImagePath%>">
+                                                    <% } %>
+                                                <% } %>
+                
+                                                <h2><%= thiscomments[z].nickname %></h2>
+                                                <p class="points"><%= thiscomments[z].points %></p>
+                                            </div>
+                                            </a>
+                
+                                            <p><%= thiscomments[z].text %></p>
+        
+                                            <% if (thiscomments[z].photoid != null) { %>
+                                                <% let commentimg = image.filter(img => img.thisid.toString() == thiscomments[z].photoid) %>
+                                                <% if (commentimg[0] != null) { %>
+                                                    <img class="photo" src="<%=commentimg[0].coverImagePath%>">
+                                                <% } %>
+                                            <% } %>
+        
+                                            <form action="/users/comment/like/<%=fullId%>" method="post">
+                                                <input name="like" class="hidden" value='{"postid":"<%=posts[i]._id%>", "commentid":"<%=thiscomments[z]._id%>", "liker":"<%=loguser.name%>"}'>
+                                                <button type="submit" class="commentlike">Like</button>
+                                            </form>
+        
+                                            <span class="commentcounter">
+                                                <%= thiscomments[z].likes.length %> 
+                                            </span>
+        
+                                            </div>
+                                <% } %>
+                                </div>
+                            </div>
+        
+                            </div>
+                                <div class="buttons">
+                                    <div id="likes">
+                                        <form action="/users/like/<%=fullId%>" method="post">
+                                            <input name="like" class="hidden" value='{"postid":"<%=posts[i]._id%>", "liker":"<%=loguser.name%>"}'>
+                                            <button type="submit" class="like">Like</button>
+                                        </form>
+                                        <span class="counter">
+                                            <%= posts[i].likes.length %> 
+                                        </span>
+                                    </div>
+                                    
+                                    <form action="/users/comment/save/<%=fullId%>" method="post">
+                                        <input name="save" class="hidden" value='{"postid":"<%=posts[i]._id%>", "user":"<%=user.name%>"}'>
+                                        <button type="submit" class="like">Save</button>
+                                    </form>
+                                </div>
+                        </div>
+                    <% } %>
+         
+                </div>
+            </div>
+            </div>
+
+            <div id="trueright">
+                <div id="mouseeffects">
+                    <button class="effects">Mouse effects</button>
+                </div>
+                
+            <div id="right">
+                <h1 class="sticky">Comments on <%= user.name %> profile</h1>
+        
+                                <form id="sendcomment" action="/users/comment/profileadd/<%=fullId%>" method="post" name="form1">
+                                    <input id="sendcomment" name="id" class="hidden" value='{"user": "<%=user.name%>", "commenter":"<%=loguser.name%>"}'>
+                                    <textarea class="commentfield" name="comment"></textarea>
+                                    <input type="file" id="inputimg" name="image" class="filepond">
+                                    <button class="commentbtn" type="submit">Comment</button>
+                                </form>
+        
+                                <% const allcomments = [] %>
+                                <% for (let x = 0; x < user.comments.length; x++) { %>
+                                    <% allcomments.push(user.comments[x]) %>
+                                <% } %>
+                                <% const thiscomments = allcomments.sort((a, b) => a.createdAt - b.createdAt).reverse() %>
+                                
+                                <div class="allcomments">
+                                <% for (let z = 0; z < thiscomments.length; z++) { %>
+                                    <div class="newcomment">
+                                    <div class="userprofile">
+        
+                                        <% if (thiscomments[z].userprof != null) { %>
+                                            <% let commentimg = image.filter(img => img.thisid.toString() == thiscomments[z].userprof) %>
+                                            <% if (commentimg[0] != null) { %>
+                                                <img class="profile" src="<%=commentimg[0].coverImagePath%>">
+                                            <% } %>
+                                        <% } %>
+        
+                                        <h2><%= thiscomments[z].nickname %></h2>
+                                        <p class="points"><%= thiscomments[z].points %></p>
+                                    </div>
+        
+                                    <p><%= thiscomments[z].text %></p>
+
+                                    <% if (thiscomments[z].photoid != null) { %>
+                                        <% let commentimg = image.filter(img => img.thisid.toString() == thiscomments[z].photoid) %>
+                                        <% if (commentimg[0] != null) { %>
+                                            <img class="photo" src="<%=commentimg[0].coverImagePath%>">
+                                        <% } %>
+                                    <% } %>
+        
+                                        <form action="/users/comment/profilecommentlike/<%=fullId%>" method="post">
+                                            <input name="like" class="hidden" value='{"user": "<%=user.name%>", "commentid":"<%=thiscomments[z]._id%>", "liker":"<%=loguser.name%>"}'>
+                                            <button type="submit" class="like">Like</button>
+                                        </form>
+                                        <span class="commentcounter">
+                                        <%= thiscomments[z].likes.length %>
+                                        </span>
+                                    </div>
+                                <% } %>
+                                </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</body>
+
+</html>

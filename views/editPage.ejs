@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Gamebook | Edit Profile</title>
+    <link href="/static/css/edit.css" rel="stylesheet" />
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
+        rel="stylesheet">
+    <script defer src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+    <script defer src="https://unpkg.com/filepond-plugin-file-encode/dist/filepond-plugin-file-encode.js"></script>
+    <script defer src="https://unpkg.com/filepond-plugin-image-resize/dist/filepond-plugin-image-resize.js"></script>
+    <script defer src="https://unpkg.com/filepond/dist/filepond.js"></script>
+    <script defer src="/static/js/fileUpload.js"></script>
+    
+</head>
+
+<body>
+    <canvas></canvas>
+    <div id="root">
+        
+        <div id="container">
+
+            <div id="trueleft">
+
+                
+                    <a id="back" href="/users/view/<%=user.name%><%=fullId%>">
+                    <button><i id="arrow" class="bi bi-arrow-left"></i>Back to your profile</button>
+                    </a>
+                
+
+                <div id="userdiv">
+                    <a href="/users/view/<%=user.name%><%=fullId%>">
+                        <div id="profile">
+                            <% let profileimg = image.filter(img => img.thisid.toString() == user.profilepic) %>
+                            <% if (profileimg[0] != null) { %>
+                                <img class="profile" src="<%=profileimg[0].coverImagePath%>">
+                            <% } %>
+                
+                            <h1><%= user.name || "Not found" %></h1>
+                            <p class="points"><%= user.points %></p>
+                        </div>
+                    </a>
+                    <p><%= user.description %></p>
+                </div>
+                
+                <div id="left">
+                    <h1 class="sticky">Change Desription</h1>
+                    <form action="/users/edit/<%=fullId%>" method="POST" id="editform">
+                        <textarea form="editform" class="commentfield" id="desc" name="desc"></textarea>
+                        <button class="like" type="submit">Save</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="truemiddle">
+
+                <div id="title">
+                    <a href="/users/<%=fullId%>" id="refresh">
+                        <span id="name">Gamebook</span>
+                    </a>
+                </div>
+                
+                <div id="change">
+                    <h2>Change profile picture</h2>
+                    <form action="/users/edit/<%=fullId%>" method="POST">
+                        <input type="file" name="image" class="filepond">
+                        <button type="submit" class="like">Save</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="trueright">
+                <div id="mouseeffects">
+                    <button class="effects">Mouse effects</button>
+                </div>
+                
+            </div>
+
+    </div>
+
+    <script src="/static/js/bubbles.js"></script>
+
+</body>
+
+</html>

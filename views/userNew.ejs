@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet" />
+    <title>Gamebook | Create Account</title>
+    <link href="/static/css/new.css" rel="stylesheet" />
+    <script defer src="/static/js/bubbles.js"></script>
+</head>
+
+<body>
+    <canvas></canvas>
+
+    <div id="container">
+
+        <span id="header">Create Account</span>
+
+        <form action="/users/new/userCreated" method="POST">
+            <div id="form">
+            <div id="field1">
+                <span class="titles">name</span>
+                <input autocomplete="off" id="input1" type="text" name="nickname" required>
+            </div>
+
+            <div id="field2">
+                <span class="titles">password</span>
+                <input id="input2" type="password" name="password" required>
+            </div>
+
+            </div>
+            
+            <button id="login" type="submit">Create Account</button>
+        </form>
+
+    </div>
+
+</body>
+
+</html>

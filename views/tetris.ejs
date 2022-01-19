@@ -1,0 +1,30 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Gamebook | Tetris</title>
+    <link rel="stylesheet" href="/static/css/tetris.css">
+    <script defer src="/static/js/tetris.js"></script>
+</head>
+
+<body>
+
+
+    <a id="back" href="/users/<%=fullId%>">
+        <button><i id="arrow" class="bi bi-arrow-left"></i>Back to main page</button>
+    </a>
+
+    <div id="middle">
+        <canvas></canvas>
+        <h2 id="scoreboard">Score: 0</h2>
+        <div id="instructions">
+            <p>Use A, D to move</p>
+            <p>Use S to pull down</p>
+            <p>Use W to rotate</p>
+        </div>
+    </div>
+
+
+</body>
+
+</html>

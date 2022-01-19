@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Gamebook | Users</title>
+    <link href="/static/css/list.css" rel="stylesheet" />
+</head>
+
+<body>
+    <canvas></canvas>
+    <div id="page">
+        <div id="title">
+            <a href="/users/<%=fullId%>" id="refresh">
+                <span id="name">Gamebook</span>
+            </a>
+        </div>
+
+        <div id="container">
+            <div id="middle">
+                <% for (let i = 0; i < users.length; i++) { %>
+                    <a href="/users/view/<%= users[i].name %><%= fullId %>">
+                    <div class="userprofile">
+                        <% if (image[i]) { %>
+                            <% } %>
+                        <% if (users[i].profilepic != null) { %>
+                            <% let commentimg = image.filter(img => img.thisid.toString() == users[i].profilepic) %>
+                            <% if (commentimg[0] != null) { %>
+                                <img class="profile" src="<%=commentimg[0].coverImagePath%>">
+                            <% } %>
+                        <% } %>
+
+                        <h2><%= users[i].name %></h2>
+                        <p class="points"><%= users[i].points %></p>
+                    </div>
+                    </a>
+                <% } %>
+
+            </div>
+            <div id="trueright">
+                <div id="mouseeffects">
+                    <button class="effects">Mouse effects</button>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/bubbles.js"></script>
+    <script src="/static/js/scrolling.js"></script>
+    <script src="/static/js/likes.js"></script>
+
+</body>
+
+</html>

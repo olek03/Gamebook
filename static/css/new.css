@@ -1,0 +1,97 @@
+* {
+    box-sizing: border-box;
+  }
+  
+  body {
+    background: url("../images/sky.png") fixed center/cover no-repeat;
+    font-family: Roboto;
+    font-weight: Bold;
+    margin: 0;
+    user-select: none;
+  }
+  
+  input, button {
+    border: none;
+  }
+
+  input:focus, button:focus {
+    outline: 0;
+  }
+  
+  button:hover, a:hover {
+    box-shadow: 0 0 0.625em 0.125em white;
+  }
+  
+  input {
+    font-size: 2.25rem;
+    padding-left: 0.625em;
+    color: rgb(233, 162, 158);
+    background: rgba(253, 253, 253, 0.6);
+    border-radius: 2em;
+    width: 100%;
+    height: 100%;
+  }
+  
+  canvas {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+  
+  #container {
+    position: absolute;
+    width: 30%;
+    height: min-content;
+    background: rgba(241, 239, 239, 0.8);
+    left: 35%;
+    top: 3%;
+    border-radius: 3em;
+    text-align: center;
+    padding-top: 4%;
+    padding-bottom: 4%;
+  }
+  
+  #header {
+    color: rgba(130, 184, 223, 0.6);
+    font-size: 4rem;
+  }
+
+  #form {
+    padding: 5%;
+  }
+  
+  #field1 {
+    width: 80%;
+    height: 10%;
+    margin-top: 20%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+  }
+  
+  .titles {
+    color: rgba(130, 184, 223, 0.6);
+    font-size: 1.625rem;
+    margin-left: 5%;
+  }
+  
+  #field2 {
+    width: 80%;
+    height: 10%;
+    margin-top: 2%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+  }
+  
+  #login {
+    width: max-content;
+    height: min-content;
+    background: rgba(240, 178, 175, 0.8);
+    padding: 0.35em 1em;
+    margin-top: 5%;
+    border-radius: 2em;
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.8);
+  }
+   

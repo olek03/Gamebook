@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Gamebook | Main Page</title>
+    <link href="/static/css/success.css" rel="stylesheet" />
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
+        rel="stylesheet">
+    <script defer src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+    <script defer src="https://unpkg.com/filepond-plugin-file-encode/dist/filepond-plugin-file-encode.js"></script>
+    <script defer src="https://unpkg.com/filepond-plugin-image-resize/dist/filepond-plugin-image-resize.js"></script>
+    <script defer src="https://unpkg.com/filepond/dist/filepond.js"></script>
+    <script defer src="/static/js/fileUpload.js"></script>
+
+    <script defer src="/static/js/bubbles.js"></script>
+    <script defer src="/static/js/scrolling.js"></script>
+    <script defer src="/static/js/likes.js"></script>
+    <script defer src="/static/js/action.js"></script>
+</head>
+
+<body>
+    <canvas></canvas>
+    <div id="page">
+        <div id="title">
+            <a href="/users/<%=fullId%>" id="refresh">
+                <span id="name">Gamebook</span>
+            </a>
+        </div>
+
+        <div id="container">
+
+            <div id="left">
+                <h1 id="gamesheader">Play games</h1>
+                <a href="/users/games/mario/<%=fullId%>">
+                    <p>Mario game</p>
+                    <img src="/static/images/mario_img.png" alt="mario">
+                </a>
+                <p><li>earn 40 points for each boss kill</li></p>
+
+                <a href="/users/games/tetris/<%=fullId%>">
+                    <p>Tetris</p>
+                    <img src="/static/images/tetris_img.png" alt="tetris">
+                </a>
+                <p><li>earn 7 points for each row</li></p>
+            </div>
+
+            <div id="middle">
+
+                <div id="field">
+                    <form action="/users/posts/add/<%=fullId%>" method="POST" id="postform">
+                        <span>Write post:</span>
+                        <textarea class="postfield" name="post" form="postform"></textarea>
+                        <input type="file" name="image" class="filepond">
+                        <button type="submit">Add</button>
+                    </form>
+                </div>
+
+                <div id="posts">
+
+            <% for (let i = 0; i < posts.length; i++) { %>
+                <% if (i < 1) { %>
+                    <div class="postframe show">
+                <% } else { %>
+                    <div class="postframe">
+                <% } %>
+
+                    <div class="maincontent">
+
+                    <div class="post">
+                    <a href="/users/view/<%=posts[i].nickname%><%=fullId%>">
+                    <div class="userprofile">
+
+                    <% let userphoto = image.filter(img => img.thisid.toString() == posts[i].userprof) %>
+                    <% if (userphoto[0] != null) { %>
+                        <img class="profile" src="<%=userphoto[0].coverImagePath%>">
+                     <% } %>
+                    
+                    <h1><%= posts[i].nickname %></h1>
+                    <p class="points"><%= posts[i].points %></p>
+                    <p></p>
+                    </div>
+                    </a>
+
+                    <div class="postcontent">
+                    <% if (posts[i].text) { %>
+                    <p><%= posts[i].text %></p>
+                    <% } %>
+                    
+                    <% let postimg = image.filter(img => img.thisid.toString() == posts[i].photoid) %>
+                    <% if (postimg[0] != null) { %>
+                        <img class="photo" src="<%=postimg[0].coverImagePath%>">
+                        <% } %>
+                    </div>
+                    </div>
+
+                    <div class="comments">
+                        <h2>Comments</h2>
+
+                        <form id="sendcomment2" action="/users/comment/add/<%=fullId%>" method="post" name="form2">
+                            <input id="sendcomment" name="id" class="hidden" value='{"postid":"<%=posts[i]._id%>", "commenter":"<%=user.name%>"}'>
+                            <textarea class="commentfield" name="comment"></textarea>
+                            <input type="file" id="inputimg" name="image" class="filepond">
+                            <button class="commentbtn" type="submit">Comment</button>
+                        </form>
+
+                        <% const allcomments = [] %>
+                        <% for (let x = 0; x < posts[i].comments.length; x++) { %>
+                            <% allcomments.push(posts[i].comments[x]) %>
+                        <% } %>
+                        <% const thiscomments = allcomments.sort((a, b) => a.createdAt - b.createdAt).reverse() %>
+                        
+                        <div class="allcomments">
+                        <% for (let z = 0; z < thiscomments.length; z++) { %>
+                            <div class="newcomment">
+                                    <a href="/users/view/<%=thiscomments[z].nickname%><%=fullId%>">
+                                    <div class="userprofile">
+        
+                                        <% if (thiscomments[z].userprof != null) { %>
+                                            <% let commentimg = image.filter(img => img.thisid.toString() == thiscomments[z].userprof) %>
+                                            <% if (commentimg[0] != null) { %>
+                                                <img class="profile" src="<%=commentimg[0].coverImagePath%>">
+                                            <% } %>
+                                        <% } %>
+        
+                                        <h2><%= thiscomments[z].nickname %></h2>
+                                        <p class="points"><%= thiscomments[z].points %></p>
+                                    </div>
+                                    </a>
+        
+                                    <p><%= thiscomments[z].text %></p>
+
+                                    <% if (thiscomments[z].photoid != null) { %>
+                                        <% let commentimg = image.filter(img => img.thisid.toString() == thiscomments[z].photoid) %>
+                                        <% if (commentimg[0] != null) { %>
+                                            <img class="photo" src="<%=commentimg[0].coverImagePath%>">
+                                        <% } %>
+                                    <% } %>
+
+                                    <form action="/users/comment/like/<%=fullId%>" method="post">
+                                        <input name="like" class="hidden" value='{"postid":"<%=posts[i]._id%>", "commentid":"<%=thiscomments[z]._id%>", "liker":"<%=user.name%>"}'>
+                                        <button type="submit" class="commentlike">Like</button>
+                                    </form>
+
+                                    <span class="commentcounter">
+                                        <%= thiscomments[z].likes.length %> 
+                                    </span>
+
+                                    </div>
+                        <% } %>
+                        </div>
+                    </div>
+
+                    </div>
+                        <div class="buttons">
+                            <div id="likes">
+                                <form action="/users/like/<%=fullId%>" method="post">
+                                    <input name="like" class="hidden" value='{"postid":"<%=posts[i]._id%>", "liker":"<%=user.name%>"}'>
+                                    <button type="submit" class="like">Like</button>
+                                </form>
+                                <span class="counter">
+                                    <%= posts[i].likes.length %> 
+                                </span>
+                            </div>
+
+                            <form action="/users/comment/save/<%=fullId%>" method="post">
+                                <input name="save" class="hidden" value='{"postid":"<%=posts[i]._id%>", "user":"<%=user.name%>"}'>
+                                <button type="submit" class="like">Save</button>
+                            </form>
+
+                        </div>
+                </div>
+            <% } %>
+         
+                </div>
+            </div>
+
+            <div id="right">
+
+                <button class="effects">Mouse effects</button>
+                <a id="logout" href="/users/login">Log out</a>
+
+                <a href="/users/view/<%=user.name%><%=fullId%>">
+                    <div id="profile">
+                        <% let profileimg = image.filter(img => img.thisid.toString() == user.profilepic) %>
+                        <% if (profileimg[0] != null) { %>
+                            <img class="profile" src="<%=profileimg[0].coverImagePath%>">
+                        <% } %>
+                
+                        <h1><%= user.name || "Not found" %></h1>
+                        <p class="points"><%= user.points %></p>
+                    </div>
+                </a>
+                
+                <div id="search">
+
+                    <form action="/users/search/<%=fullId%>" method="POST">
+                        <button type="submit">Search</button>
+                        <input name="search" placeholder="Find user...">
+                    </form>
+
+                </div>
+                <div id="leaderboard">
+                    <h2 id="top5">Leaderboard - Top 5</h2>
+                    <% for (let i = 0; i < ranking.length; i++) { %>
+                        <a href="/users/view/<%=ranking[i].name%><%=fullId%>">
+                        <div id="profile">
+                            <% let profileimg = image.filter(img => img.thisid.toString() == ranking[i].profilepic) %>
+                            <% if (profileimg[0] != null) { %>
+                                <img class="profile" src="<%=profileimg[0].coverImagePath%>">
+                            <% } %>
+                    
+                            <% if (i === 0) { %> <h1><%= ranking[i].name %></h1> <% } %>
+                            <% if (i === 1) { %> <h2><%= ranking[i].name %></h2> <% } %>
+                            <% if (i === 2) { %> <h3><%= ranking[i].name %></h3> <% } %>
+                            <% if (i > 2) { %> <span><%= ranking[i].name %></span> <% } %>
+                            <p class="points"><%= ranking[i].points %></p>
+                        </div>
+                        </a>
+                    <% } %>
+                </div>
+            </div>
+            
+
+        </div>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Pacifico&display=swap" rel="stylesheet" />
+    <title>Gamebook | Log in</title>
+    <link href="/static/css/login.css" rel="stylesheet" />
+</head>
+
+<body>
+    <canvas></canvas>
+
+    <div id="container">
+        <h1 id="name">Gamebook</h1>
+        <span id="header">Log in</span>
+
+        <form action="/users/login" method="POST">
+            <div id="field1">
+                <span class="titles">username</span>
+                <input autocomplete="off" id="input1" type="text" name="login" required>
+            </div>
+
+            <div id="field2">
+                <span class="titles">password</span>
+                <input id="input2" type="password" name="password" required>
+            </div>
+            <button id="login" type="submit">Log in</button>
+        </form>
+
+        <div id="create">
+            <div id="accountdiv">
+                <span id="account">Don’t have account?</span>
+            </div>
+            <div id="registerdiv">
+                <a id="register" href="/users/new">Register</a>
+            </div>
+
+        </div>
+        <h3 id="footer">Join our Beautiful Community</h3>
+    </div>
+
+    <script src="/static/js/bubbles.js"></script>
+</body>
+
+</html>
