@@ -9,7 +9,7 @@ const usersRouter = require("./routers/usersRouter")
 
 app.set("view engine", "ejs")
 app.use("/static", express.static(__dirname + "/static"))
-app.use(express.urlencoded())
+app.use(express.urlencoded({ extended: false }))
 
 app.use("/users", usersRouter)
 
