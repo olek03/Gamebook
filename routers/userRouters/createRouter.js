@@ -3,6 +3,8 @@ const router = express.Router()
 const bcrypt = require("bcrypt")
 const User = require("../../models/User")
 
+let taken = 0
+
 router.post("/userCreated", async (req, res) => {
     try {
         let today = new Date()
