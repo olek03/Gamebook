@@ -4,7 +4,7 @@ const userSchema = new mongoose.Schema({
     name: {
         type: String,
         unique: true,
-        required: true,
+        required: true
     },
     password: {
         type: String,
@@ -41,19 +41,16 @@ const userSchema = new mongoose.Schema({
         },
         likes: [{
             type: mongoose.Types.ObjectId,
-            unique: true
         }],
         photoid: mongoose.Types.ObjectId
     }],
     likes: [{
         type: mongoose.Types.ObjectId,
-        unique: true
     }],
     posts: [{
         nickname: String,
         likes: [{
             type: mongoose.Types.ObjectId,
-            unique: true
         }],
         text: String,
         _id: mongoose.Types.ObjectId,
@@ -64,7 +61,6 @@ const userSchema = new mongoose.Schema({
         comments: [{
             _id: {
                 type: mongoose.Types.ObjectId,
-                unique: true
             },
             user: mongoose.Types.ObjectId,
             userprof: mongoose.Types.ObjectId,
@@ -74,7 +70,6 @@ const userSchema = new mongoose.Schema({
             createdAt: Number,
             likes: [{
                 type: mongoose.Types.ObjectId,
-                unique: true
             }],
             photoid: mongoose.Types.ObjectId
         }]
