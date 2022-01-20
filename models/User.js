@@ -4,7 +4,6 @@ const userSchema = new mongoose.Schema({
     name: {
         type: String,
         unique: true,
-        lowercase: true,
         required: true,
     },
     password: {
@@ -21,7 +20,6 @@ const userSchema = new mongoose.Schema({
     },
     JoinedAt: {
         type: String,
-        default: Date.now(),
         immutable: true
     },
     description: {
