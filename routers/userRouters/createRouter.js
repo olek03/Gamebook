@@ -3,8 +3,6 @@ const router = express.Router()
 const bcrypt = require("bcrypt")
 const User = require("../../models/User")
 
-let taken = 0
-
 router.post("/userCreated", async (req, res) => {
     try {
         let today = new Date()
@@ -29,19 +27,28 @@ router.post("/userCreated", async (req, res) => {
 
         today = `${dd}-${mm}-${yyyy} ${hh}:${mi}`
 
-        const newuser = new User({ 
-            name: req.body.nickname, 
-            password: await bcrypt.hash(req.body.password, 10), 
-            JoinedAt: today,
-            points: 0
+        const usernames = await User.find({}, { name: 1 })
+        let stop = 0
+        usernames[0].forEach(user => {
+            if (user.name === req.body.nickname) stop = 1
         })
-        
-        await newuser.save()
-            
-        res.redirect("/users/login")
+
+        if (stop !== 1) {
+
+            const newuser = new User({
+                name: req.body.nickname,
+                password: await bcrypt.hash(req.body.password, 10),
+                JoinedAt: today,
+                points: 0
+            })
+
+            await newuser.save()
+            res.redirect("/users/login")
+        } else {
+            res.redirect("/users/new")
+        }
 
     } catch (e) {
-        taken = 1
         console.error(e.message)
     }
 })
