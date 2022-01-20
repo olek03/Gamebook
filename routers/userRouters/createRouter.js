@@ -31,7 +31,7 @@ router.post("/userCreated", async (req, res) => {
 
         const usernames = await User.find({}, { name: 1 })
         let stop = 0
-        usernames[0].forEach(user => {
+        usernames.forEach(user => {
             if (user.name === req.body.nickname) stop = 1
         })
 
